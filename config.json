@@ -1,0 +1,45 @@
+[
+  {
+    "sched_key": "name",
+    "store_key": "uid",
+    "regex_match": "SAN19-[A-Za-z]*[0-9]+K*[0-9]*",
+    "hidden": true,
+    "force_lower": true
+  },
+  {
+    "sched_key": "name",
+    "store_key": "Session Title"
+  },
+  {
+    "sched_key": "event_start",
+    "store_key": "Session Start Time"
+  },
+  {
+    "sched_key": "event_end",
+    "store_key": "Session End Time"
+  },
+  {
+    "sched_key": "event_type",
+    "store_key": "Session Track"
+  },
+  {
+    "sched_key": "venue",
+    "store_key": "Session Room"
+  },
+  {
+    "store_key": "Video File Name",
+    "value": "[uid].mp4"
+  },
+  {
+    "store_key": "Video URL",
+    "value": "https://static.linaro.org/connect/san19/videos/[uid].mp4"
+  },
+  {
+    "store_key": "Presentation URL",
+    "value": "https://static.linaro.org/connect/san19/presentations/[uid].pdf"
+  },
+  {
+    "store_key": "Website URL",
+    "value": "https://connect.linaro.org/san19/sessions/[uid]/"
+  }
+]
