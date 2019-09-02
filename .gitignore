@@ -1,0 +1,6 @@
+venv/
+client_secret*.json
+token.json
+API_KEY.secret
+__pycache__
+sched_session_tracker/__pycache__
