@@ -1,5 +1,6 @@
 # sched_session_tracker
-This repo hosts a python3 script to create, update and delete entries in a Google sheet based on a sched.com event export. This will be used by external AV contractors that need to track which sessions have been recorded/edited at the event.
+
+This repo hosts a python3 script to create, update and delete entries in a Google sheet based on a sched.com event export. This will be used by external AV contractors that need to track which sessions have been recorded/edited at the event. With sessions changing constantly, this script provides way to host a GoogleSheet that's visible to external colleagues for tracking work on session resources.
 
 ## Usage
 
@@ -48,7 +49,6 @@ $ source venv/bin/activate
 
 Now, whenever you run python3, your virtualenv will be used keeping your global python installation clean! Finish by installing the modules required by this projects scripts:
 
-
 ```bash
 $ pip3 install -r requirements.txt
 Installing....
@@ -77,12 +77,11 @@ Head over to [Google's Cloud Service](https://console.cloud.google.com/apis/cred
 
 Once you've done this you'll see your ID appear in the `OAuth 2.0 Client ID's` section on the same page. Then click the download icon to download your client_secret******.json file and save into the root of the `sched_session_tracker` directory which you just cloned.
 
-### Step 3 - Get your token from Google!
+### Step 3 - Get your token from Google
 
 So you've setup your client application in the Google Cloud Console and now you need to retreive your token.
 
-### Step 4...
-
+### Step 4
 
 The `SchedSessionTracker` class requires the following arguments:
 
