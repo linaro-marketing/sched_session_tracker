@@ -4,9 +4,13 @@ from sched_session_tracker.googlesheet import GoogleSheetAPI
 import re
 
 class SchedSessionTracker:
-    def __init__(self, schedURL, googleSheetObj, secretFile="API_KEY.secret", verbose=True):
+    def __init__(self, schedURL, googleSheetObj, verbose=True, configFile="config.json" secretsFile="API_KEY.secret"):
         # Verbosity Setting
         self._verbose = verbose
+        # Config File name
+        self.config_file_name = configFile
+        # Secrets File name
+        self.secrets_file_name = secretsFile
         # Store the url for the sched event
         self.schedURL = "https://linaroconnectsandiego.sched.com/"
         # Creates a new instance of the GoogleSheetAPI
@@ -14,27 +18,36 @@ class SchedSessionTracker:
         # Sched REST API endpoint
         self.apiEndpoint = "/api/session/list?api_key={0}&since=1282755813&format=json"
         # Get the sched_session_tracker config
-        try:
-            if self._verbose:
-                print("Loading sched_session_tracker config from config.json...")
-            with open('config.json') as json_file:
-                self.schedSessonTrackerConfig = json.load(json_file)
-        except Exception as e:
-            if self._verbose:
-                print(e)
-            print("Please supply a config.json file to map your api results to a Google Sheet. Read the docs - https://github.com/linaro-marketing/sched_session_tracker")
+        self.config_structure, self.config_settings = self.load_config()
+        print(self.config_structure)
+        print(self.config_settings)
         # Fetch Secret API Key
-        api_secret_file = open(secretFile)
-        self.API_KEY = api_secret_file.readline().rstrip('\n')
-        api_secret_file.close()
+        self.API_KEY = self.load_secrets(self.secrets_file_name)
         # Run the main method
         self.main()
+
     def main(self):
         self.schedData = self.get_api_results(self.apiEndpoint)
         self.formatResultsUsingConfig(self.schedData, self.schedSessonTrackerConfig)
         self.crudGoogleSheet(self.schedData)
 
+    def load_secrets(self, secretsFile):
+        """Loads secrets"""
+        with open(secretsFile) as secrets:
+            return secrets.readline().rstrip('\n')
 
+    def load_config(self, config_file_name):
+        """Loads the config.json file"""
+        try:
+            if self._verbose:
+                print("Loading sched_session_tracker config from config.json...")
+            with open(config_file_name) as json_file:
+                structure = json.load(json_file)["structure"]
+                settings = json.load(json_file)["settings"]
+                return structure, settings
+        except Exception as e:
+            if self._verbose:
+                print(e)
     def formatResultsUsingConfig(self, data, config):
         """
         This method formats the Sched API results using the supplied config.json file. Fore more info please read the docs at https://github.com/linaro-marketing/sched_session_tracker
@@ -51,6 +64,11 @@ class SchedSessionTracker:
                                 regex = configEntry["regex_match"]
                                 var_regex = re.compile(configEntry["regex_match"])
                                 var_val_regex = var_regex.findall(entry[configEntry["sched_key"]])[0]
+                                try:
+                                    if configEntry['force_lower'] == True:
+                                        var_val_regex = var_val_regex.lower()
+                                except KeyError as e:
+                                    pass
                                 new_googlesheet_row[configEntry["store_key"]] = var_val_regex
                             except Exception as e:
                                 new_googlesheet_row[configEntry["store_key"]] = entry[configEntry["sched_key"]]
