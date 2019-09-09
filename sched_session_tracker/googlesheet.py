@@ -63,10 +63,13 @@ class GoogleSheetAPI:
 
     def updateValues(self, range_name, values):
         body = {
-            "range": range_name,
-            "majorDimension": "ROWS",
-            "values": [
-                values
+            "valueInputOption": self._value_input_option[0] ,
+            "data": [
+                    {
+                    "range": range_name,
+                    "majorDimension": "ROWS",
+                    "values": values
+                }
             ]
         }
         result = self.service.spreadsheets().values().batchUpdate(
