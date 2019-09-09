@@ -26,8 +26,8 @@ class SchedSessionTracker:
 
     def main(self):
         self.schedData = self.get_api_results(self.apiEndpoint)
-        self.formatResultsUsingConfig(self.schedData, self.config_settings[0]["structure"])
-        # self.crudGoogleSheet(self.schedData)
+        formatted_results  = self.formatResultsUsingConfig(self.schedData, self.config_settings[0]["structure"])
+        self.crudGoogleSheet(formatted_results)
 
     def load_secrets(self, secretsFile):
         """Loads secrets"""
@@ -45,6 +45,8 @@ class SchedSessionTracker:
         except Exception as e:
             if self._verbose:
                 print(e)
+
+
     def formatResultsUsingConfig(self, data, config):
         """
         This method formats the Sched API results using the supplied config.json file. Fore more info please read the docs at https://github.com/linaro-marketing/sched_session_tracker
@@ -91,18 +93,40 @@ class SchedSessionTracker:
                         print("Config entry is missing a store key...")
                         break
             google_sheet_rows.append(new_googlesheet_row)
-        for each in google_sheet_rows:
-            print(each)
-            input()
-    def crudGoogleSheet(self, schedExportData):
+        return google_sheet_rows
+
+    def numberToCharacter(self, number):
+        """Returns the column character for google sheet based on length of headers array"""
+        return chr(26 + (38 + number))
+
+
+    def crudGoogleSheet(self, formatted_data):
         """Takes the sched export data and adds to the Google Sheet"""
-        for entry in schedExportData:
-            session = {
-                "start_time": entry["event_start"]
-            }
-            # print(session)
-            # print(entry)
-            # input()
+        headers = self.getHeaders(formatted_data)
+        print(headers)
+        columnChar = self.numberToCharacter(len(headers))
+        data_length = len(formatted_data) + 1
+        sheet_range = "A2:{0}{1}".format(columnChar,data_length)
+        print(sheet_range)
+
+        data = []
+        for entry in formatted_data:
+            dataEntry = []
+            for item in entry:
+                dataEntry.append(entry[item])
+            data.append(dataEntry)
+        print(data)
+        print("Adding initial google sheet data")
+        self.googleSheet.updateValues(sheet_range, data)
+
+
+    def getHeaders(self, results):
+        first_entry = results[0]
+        headers = []
+        for key, value in first_entry.items():
+            headers.append(key)
+        return headers
+
     def get_api_results(self, endpoint):
         """
             Gets the results from a specified endpoint
