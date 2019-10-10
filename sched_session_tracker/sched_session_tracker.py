@@ -53,6 +53,7 @@ class SchedSessionTracker:
         """
         google_sheet_rows = []
         for entry in data:
+            passed = True
             new_googlesheet_row = {}
             for configEntry in config:
                 # Check to see if the config entry contains a sched_key
@@ -61,7 +62,7 @@ class SchedSessionTracker:
                         if configEntry["store_key"]:
                             try:
                                 regex = configEntry["regex_match"]
-                                var_regex = re.compile(configEntry["regex_match"])
+                                var_regex = re.compile(regex)
                                 var_val_regex = var_regex.findall(entry[configEntry["sched_key"]])[0]
                                 try:
                                     if configEntry['force_lower'] == True:

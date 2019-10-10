@@ -29,6 +29,14 @@
             "force_lower": true
         },
         {
+            "store_key": "Video File Name",
+            "value": "[uid].mp4"
+        },
+        {
+            "store_key": "Video Done",
+            "value": ""
+        },
+        {
             "sched_key": "name",
             "store_key": "Session Title"
         },
@@ -49,10 +57,6 @@
             "store_key": "Session Room"
         },
         {
-            "store_key": "Video File Name",
-            "value": "[uid].mp4"
-        },
-        {
             "store_key": "Video URL",
             "value": "https://static.linaro.org/connect/san19/videos/[uid].mp4"
         },
@@ -62,7 +66,7 @@
         },
         {
             "store_key": "Website URL",
-            "value": "https://connect.linaro.org/san19/sessions/[uid]/"
+            "value": "https://connect.linaro.org/resources/san19/sessions/[uid]/"
         }
     ]
   }
